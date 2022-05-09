@@ -10,6 +10,7 @@ type Props = {
   name: string,
   order: number, // eslint-disable-line react/no-unused-prop-types
   text: string, // eslint-disable-line react/no-unused-prop-types
+  onPress: ?func,
 };
 
 class CopilotStep extends Component<Props> {
@@ -22,6 +23,7 @@ class CopilotStep extends Component<Props> {
   }
 
   render() {
+
     const currentStep = this.context._copilot.getCurrentStep();
 
     return createElement(

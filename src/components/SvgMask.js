@@ -9,10 +9,16 @@ import {
 import Svg from 'react-native-svg';
 import AnimatedSvgPath from './AnimatedPath';
 
-import type { valueXY, svgMaskPath, Step } from '../types';
+import type { valueXY, svgMaskPath } from '../types';
 
 const windowDimensions = Dimensions.get('window');
-const defaultSvgPath = ({ size, position, canvasSize }): string => `M0,0H${canvasSize.x}V${canvasSize.y}H0V0ZM${position.x._value},${position.y._value}H${position.x._value + size.x._value}V${position.y._value + size.y._value}H${position.x._value}V${position.y._value}Z`;
+const defaultSvgPath = ({ size, position, canvasSize }): string => `
+M-50,-50H${canvasSize.x +10}V${canvasSize.y + 10}H-50V-50Z
+M${position.x._value},${position.y._value}
+H${position.x._value + size.x._value - 5}a5,5 0 0 1 5,5
+V${position.y._value + size.y._value -5 }a5,5 0 0 1 -5,5
+H${position.x._value + 5}a5,5 0 0 1 -5,-5
+V${position.y._value + 5}a5,5 0 0 1 5,-5Z`;
 
 type Props = {
   size: valueXY,
@@ -24,7 +30,6 @@ type Props = {
   backdropColor: string,
   svgMaskPath?: svgMaskPath,
   onClick?: () => void,
-  currentStep: Step
 };
 
 type State = {
@@ -66,7 +71,6 @@ class SvgMask extends Component<Props, State> {
       size: this.state.size,
       position: this.state.position,
       canvasSize: this.state.canvasSize,
-      step: this.props.currentStep,
     });
     if (this.mask) {
       this.mask.setNativeProps({ d });
@@ -114,17 +118,20 @@ class SvgMask extends Component<Props, State> {
         {
           this.state.canvasSize
             ? (
+              
               <Svg pointerEvents="none" width={this.state.canvasSize.x} height={this.state.canvasSize.y}>
+
                 <AnimatedSvgPath
                   ref={(ref) => { this.mask = ref; }}
                   fill={this.props.backdropColor}
                   fillRule="evenodd"
                   strokeWidth={1}
+                  strokeDasharray="2,2"
+                  stroke='white'
                   d={this.props.svgMaskPath({
                     size: this.state.size,
                     position: this.state.position,
                     canvasSize: this.state.canvasSize,
-                    step: this.props.currentStep,
                   })}
                 />
               </Svg>

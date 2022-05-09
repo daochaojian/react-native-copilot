@@ -3,6 +3,7 @@ export type Step = {
   name: string,
   order: number,
   visible: boolean,
+  onPress: func,
   target: React$Element,
   wrapper: React$Element,
 };
@@ -24,6 +25,5 @@ export type SvgMaskPathFn = (args: {
   canvasSize: {
     x: number,
     y: number
-  },
-  step: Step
+  }
 }) => string;

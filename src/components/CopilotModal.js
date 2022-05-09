@@ -132,9 +132,8 @@ class CopilotModal extends Component<Props, State> {
     const relativeToBottom = Math.abs(center.y - layout.height);
     const relativeToRight = Math.abs(center.x - layout.width);
 
-    const verticalPosition = relativeToBottom > relativeToTop ? 'bottom' : 'top';
+    const verticalPosition = relativeToTop < 30 ? 'bottom' : relativeToBottom > relativeToTop ? 'bottom' : 'top';
     const horizontalPosition = relativeToLeft > relativeToRight ? 'left' : 'right';
-
     const tooltip = {};
     const arrow = {};
 
@@ -161,10 +160,9 @@ class CopilotModal extends Component<Props, State> {
     }
 
     const animate = {
-      top: obj.top,
+      top: relativeToTop < 30 ? 16 :obj.top,
       stepNumberLeft,
     };
-
     if (this.state.animated) {
       Animated
         .parallel(Object.keys(animate)
@@ -254,7 +252,6 @@ class CopilotModal extends Component<Props, State> {
         backdropColor={this.props.backdropColor}
         svgMaskPath={this.props.svgMaskPath}
         onClick={this.handleMaskClick}
-        currentStep={this.props.currentStep}
       />
     );
   }
@@ -264,7 +261,6 @@ class CopilotModal extends Component<Props, State> {
       tooltipComponent: TooltipComponent,
       stepNumberComponent: StepNumberComponent,
     } = this.props;
-
     return [
       <Animated.View
         key="stepNumber"
@@ -292,6 +288,7 @@ class CopilotModal extends Component<Props, State> {
           handleNext={this.handleNext}
           handlePrev={this.handlePrev}
           handleStop={this.handleStop}
+          currentStepNumber={this.props.currentStepNumber}
           labels={this.props.labels}
         />
       </Animated.View>,
@@ -301,7 +298,6 @@ class CopilotModal extends Component<Props, State> {
   render() {
     const containerVisible = this.state.containerVisible || this.props.visible;
     const contentVisible = this.state.layout && containerVisible;
-
     return (
       <Modal
         animationType="none"
@@ -311,7 +307,7 @@ class CopilotModal extends Component<Props, State> {
         supportedOrientations={['portrait', 'landscape']}
       >
         <View
-          style={styles.container}
+          style={[styles.container]}
           onLayout={this.handleLayoutChange}
         >
           {contentVisible && this.renderMask()}

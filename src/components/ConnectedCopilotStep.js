@@ -7,6 +7,7 @@ type Props = {
   name: string,
   text: string,
   order: number,
+  onPress: ?func,
   active?: boolean,
   _copilot: CopilotContext,
   children: React$Element
@@ -46,6 +47,7 @@ class ConnectedCopilotStep extends Component<Props> {
       name: this.props.name,
       text: this.props.text,
       order: this.props.order,
+      onPress: this.props.onPress,
       target: this,
       wrapper: this.wrapper,
     });
